@@ -1,3 +1,18 @@
+<?php
+$tmpPath = $_SERVER['TEMP'] . "\\" . uniqid() . '.tmp';
+$subject = str_replace("\n", "", $_POST['base64_file']);
+$pattern = '/^data\:image\/(jpg|jpeg|png|gif);base64,(.*)/';
+preg_match($pattern, $subject, $matches);
+$base64_data = base64_decode($matches[2]);
+file_put_contents($tmpPath, $base64_data);
+$_FILES['file'] = [
+    'name' => $_POST['base64_file_name'],
+    'type' => 'image' . '/' . $matches[1],
+    'tmp_name' => $tmpPath,
+    'error' => 0,
+    'size' => filesize($tmpPath)
+];
+?>
 <!DOCTYPE html>
 <html lang="en">
 
